@@ -1,7 +1,7 @@
 package com.sbrf.reboot.service;
 
 import com.sbrf.reboot.dto.Account;
-import com.sbrf.reboot.repository.AccountRepository;
+import com.sbrf.reboot.service.AccountRepository;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,17 +14,23 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import static org.mockito.Mockito.when;
 
 class AccountServiceTest {
+
     @Mock
     AccountRepository accountRepository;
+
+
     AccountService accountService;
+
     @BeforeEach
     void setUp() {
         accountRepository = Mockito.mock(AccountRepository.class);
         accountService = new AccountService(accountRepository);
     }
+
 
     @SneakyThrows
     @Test
@@ -94,4 +100,23 @@ class AccountServiceTest {
         assertTrue(allAccountsByDateMoreThen.contains(account3));
     }
 
+    @SneakyThrows
+    @Test
+    void  getAllAccountsBalanceToDollarSum(){
+        Account account1 = Account.builder().id(1L).createDate(LocalDate.now()).balance(new BigDecimal(100000)).build();
+        Account account2 = Account.builder().id(1L).createDate(LocalDate.now()).balance(new BigDecimal(200000)).build();
+        Account account3 = Account.builder().id(1L).createDate(LocalDate.now()).balance(new BigDecimal(300000)).build();
+
+        Set<Account> accounts = new HashSet() {{
+            add(account1);
+            add(account2);
+            add(account3);
+        }};
+
+        when(accountRepository.getAllAccountsByClientId(1L)).thenReturn(accounts);
+        BigDecimal ratesDollarDream = new BigDecimal(10);
+        BigDecimal sumBalance = accountService.getAllAccountsBalanceToDollarSum(1L, ratesDollarDream);
+
+        assertEquals(new BigDecimal(60000), sumBalance);
+    }
 }
