@@ -1,6 +1,6 @@
 package com.sbrf.reboot.model;
 
-import com.sbrf.reboot.dto.Account;
+import com.sbrf.reboot.ref.Account;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
